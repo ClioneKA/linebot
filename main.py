@@ -43,9 +43,9 @@ def callback():
 # 學你說話
 @handler.add(MessageEvent, message=TextMessage)
 def pretty_echo(event):
-    if event.message.text.startswith('!clione '):
-
-        request_text = event.message.text.replace('!clione ', '')
+    if event.message.text.startswith('!clione ') or event.source.type != 'group':
+        if event.message.text.startswith('!clione '):
+            request_text = event.message.text.replace('!clione ', '')
 
         response = openai.Completion.create(
             model="text-davinci-003",
