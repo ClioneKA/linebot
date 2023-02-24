@@ -43,21 +43,25 @@ def callback():
 # 學你說話
 @handler.add(MessageEvent, message=TextMessage)
 def pretty_echo(event):
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=event.message.text,
-        temperature=0.7,
-        max_tokens=2048,
-        top_p=1,
-        frequency_penalty=0.0,
-        presence_penalty=0.0,
-    )
-    responseMessage = response.choices[0].text
-    print(responseMessage)
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=responseMessage)
-    )
+    if event.message.text.startswith('!clione '):
+
+        request_text = event.message.text.replace('!clione ', '')
+
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=request_text,
+            temperature=0.7,
+            max_tokens=2048,
+            top_p=1,
+            frequency_penalty=0.0,
+            presence_penalty=0.0,
+        )
+        responseMessage = response.choices[0].text
+        print(responseMessage)
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=responseMessage.lstrip())
+        )
 
 
 if __name__ == "__main__":
