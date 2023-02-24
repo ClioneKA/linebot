@@ -46,6 +46,8 @@ def pretty_echo(event):
     if event.message.text.startswith('!clione ') or event.source.type != 'group':
         if event.message.text.startswith('!clione '):
             request_text = event.message.text.replace('!clione ', '')
+        else:
+            request_text = event.message.text
 
         response = openai.Completion.create(
             model="text-davinci-003",
