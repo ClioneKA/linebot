@@ -1,0 +1,5 @@
+/config.ini
+.env
+.idea/*
+log.txt
+*.pyc
