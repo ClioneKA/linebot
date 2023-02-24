@@ -5,6 +5,9 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
+import aiohttp
+import openai
+
 import configparser
 
 import random
@@ -17,7 +20,7 @@ config.read('config.ini')
 
 line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token'))
 handler = WebhookHandler(config.get('line-bot', 'channel_secret'))
-
+openai.api_key = config.get('line-bot', 'open_ai_key')
 
 # 接收 LINE 的資訊
 @app.route("/callback", methods=['POST'])
@@ -40,20 +43,21 @@ def callback():
 # 學你說話
 @handler.add(MessageEvent, message=TextMessage)
 def pretty_echo(event):
-    if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=TextMessage,
+        temperature=0.7,
+        max_tokens=2048,
+        top_p=1,
+        frequency_penalty=0.0,
+        presence_penalty=0.0,
+    )
+    responseMessage = response.choices[0].text
 
-        # Phoebe 愛唱歌
-        pretty_note = '♫♪♬'
-        pretty_text = ''
-
-        for i in event.message.text:
-            pretty_text += i
-            pretty_text += random.choice(pretty_note)
-
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=pretty_text)
-        )
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=responseMessage)
+    )
 
 
 if __name__ == "__main__":
