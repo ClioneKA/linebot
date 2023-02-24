@@ -45,7 +45,7 @@ def callback():
 def pretty_echo(event):
     response = openai.Completion.create(
         model="text-davinci-003",
-        prompt=TextMessage.__str__(),
+        prompt=str(TextMessage),
         temperature=0.7,
         max_tokens=2048,
         top_p=1,
