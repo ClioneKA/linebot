@@ -57,7 +57,6 @@ def pretty_echo(event):
             presence_penalty=0.0,
         )
         responseMessage = response.choices[0].text
-        print(responseMessage)
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=responseMessage.lstrip())
